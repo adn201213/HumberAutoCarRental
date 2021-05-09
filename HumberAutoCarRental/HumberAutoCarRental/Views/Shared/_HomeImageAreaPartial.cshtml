@@ -1,0 +1,22 @@
+﻿
+@model HumberAutoCarRental.ViewModel.HomeImageViewModel
+
+<div class="row">
+    @if (Model.HomeImages != null)
+    {
+        foreach (var image in Model.HomeImages)
+        {
+            <div class="col-xs-6 col-md-3">
+                <div class="thumbnail">
+                    <div class="thumbnail-img-container">
+                        <a href="@image.Link"><img class="thumbnail-img" src="@image.ImageUrl" alt="" /></a>
+                    </div>
+                    <div class="caption">
+                        <h3><a href="@image.Link">@image.CarName</a></h3>
+                        <p>@Html.Raw(image.Description)</p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+</div>

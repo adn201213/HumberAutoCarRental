@@ -1,0 +1,213 @@
+﻿@model HumberAutoCarRental.ViewModel.CarRentalViewModel
+@using HumberAutoCarRental.Utility
+@{
+    ViewBag.Title = "Index";
+}
+@*//user will reserve the car to rent*@
+@using (Html.BeginForm("Reserve", "CarRent"))
+{
+    @Html.AntiForgeryToken();
+
+    <div class="row">
+        @* Car Image *@
+        <div class="col-sm-3 col-xs-4 image-car">
+            <img class="thumbnail-img" src="@Model.ImageUrl" alt="" style="width:100%;height:auto;padding:10px;" />
+        </div>
+
+        @* Car Details(CarName/Maker/Description) *@
+        <div class="col-sm-6 col-xs-8 content-car-main">
+            <div class="content-car-carName-maker">
+                <h2><b>@Model.CarName</b></h2>
+                <h5>@Model.Maker</h5>
+            </div>
+            <div>
+                <br />
+                <span>@Html.Raw(Model.Description)</span>
+            </div><br />
+        </div>
+
+        @* Rental Price and other car details *@
+    <div class="col-sm-3 col-xs-12 content-car-car1-details">
+        <div>
+            @{
+                List<SelectListItem> listItem = new List<SelectListItem>();
+
+                listItem.Add(new SelectListItem
+                {
+                    Text = SD.OneDay,
+                    Value = SD.OneDayCount
+                });
+                listItem.Add(new SelectListItem
+                {
+                    Text = SD.OneWeek,
+                    Value = SD.OneWeekCount
+                });
+
+
+                listItem.Add(new SelectListItem
+                {
+                    Text = SD.OneMonth,
+                    Value = SD.OneMonthCount
+                });
+                listItem.Add(new SelectListItem
+                {
+                    Text = SD.ThreeMonths,
+                    Value = SD.ThreeMonthCount
+                });
+                listItem.Add(new SelectListItem
+                {
+                    Text = SD.SixMonth,
+                    Value = SD.SixMonthCount
+                });
+                listItem.Add(new SelectListItem
+                {
+                    Text = SD.OneYear,
+                    Value = SD.OneYearCount
+                });
+
+            }
+
+
+            @if (Model.RentalPriceOneDay != 0 && Model.RentalPriceOneWeek != 0 && Model.RentalPriceOneMonth != 0
+            && Model.RentalPriceThreeMonth != 0 && Model.RentalPriceSixMonth != 0 && Model.RentalPriceOneYear != 0)
+            {
+                //User has logged in and they are not admin
+
+                <div class="form-control" style="height:350px;">
+                    <div class="input-group" style="height:30px">
+                        <label>Original Price:</label>
+                        <label id="lblMSRP" style="font-weight:normal;">$@(Model.Price)</label><br />
+                    </div>
+                    <hr />
+
+                    <div class="input-group" style="height:90px;">
+                        <label>Rental Price : </label><br />
+                        <label id="lblOneMonth" style="font-weight:normal;">One Day : $@(Model.RentalPriceOneDay)</label>
+                        <br />
+                        <label id="lblOneMonth" style="font-weight:normal;">One Week : $@(Model.RentalPriceOneWeek*7)</label>
+                        <br />
+
+                        <label id="lblOneMonth" style="font-weight:normal;">One Month : $@(Model.RentalPriceOneMonth*30)</label>
+                        <br />
+                        <label id="lblOneMonth" style="font-weight:normal;">Three Month : $@(Model.RentalPriceThreeMonth*90)</label>
+
+                        <br />
+                        <label id="lblOneMonth" style="font-weight:normal;">Six Months : $@(Model.RentalPriceSixMonth*180)</label>
+                        <br />
+                        <label id="lblOneMonth" style="font-weight:normal;">One Year : $@(Model.RentalPriceOneYear*360)</label>
+                    </div>
+
+                    <label>Select your rental duration : </label><br />
+                    @Html.DropDownListFor(m => m.RentalDuration, listItem, new { @class = "form-control" })
+                    <span style="font-size:12px;">Reserve before 3pm for same day pickup.<br /><br /></span>
+
+                    @if (Model.Avaibility > 0)
+                    {
+                        <button type="submit" class="btn btn-primary">
+                            <span class="glyphicon glyphicon-thumbs-up"></span>&nbsp;Reserve
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-danger disabled">
+                            <span class="glyphicon glyphicon-thumbs-down"></span>&nbsp;Unavailable
+                        </button>
+                    }
+                </div>
+
+            }
+            else
+            {
+
+                //User not logged in or user is an admin
+
+              
+
+                <div class="form-control" style="height:150px;">
+                    <div class="input-group" style="height:30px">
+                        <label>Price:</label>
+                        <label id="lblMSRP" style="font-weight:normal;">$@(Model.Price)</label><br />
+                    </div>
+                    <hr />
+
+
+                    @if (User.IsInRole(SD.AdminUserRole) && Model.Avaibility > 0)
+                    {
+                        //Admin user with Create button
+                        @Html.ActionLink("Create Rental", "Create", "CarRent",
+                                     new { PlateId = Model.PlateId, CarName = Model.CarName }, new { @class = "btn btn-primary" })
+                    }
+                    else
+                    {
+                        if (User.IsInRole(SD.AdminUserRole) && Model.Avaibility == 0)
+                        {
+                            //Admin user with car not available
+                            <button type="submit" class="btn btn-danger" disabled>
+                                <span class="glyphicon glyphicon-thumbs-down"></span>Unavailable
+                            </button>
+                        }
+                        else
+                        {
+                            //User not logged in
+                            <span>Login to unlock the rental price!</span>
+
+                            <h4> @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</h4>
+                        }
+                    }
+
+                </div>
+
+            }
+
+        </div>
+
+
+        <h4 class="car-details-heading">Car Details</h4>
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(m => m.PlateId)
+            </dt>
+            <dd>
+                &nbsp;&nbsp;&nbsp;&nbsp; @Html.DisplayFor(m => m.PlateId)
+            </dd>
+        </dl>
+
+
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(m => m.Maker)
+            </dt>
+            <dd>
+                &nbsp;&nbsp;&nbsp;&nbsp; @Html.DisplayFor(m => m.Maker)
+            </dd>
+        </dl>
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(m => m.MadeYear)
+            </dt>
+            <dd>
+                &nbsp;&nbsp;&nbsp;&nbsp; @Html.DisplayFor(m => m.MadeYear)
+            </dd>
+        </dl>
+
+        <dl>
+            <dt>
+                @Html.DisplayNameFor(m => m.Price)
+            </dt>
+            <dd>
+                &nbsp;&nbsp;&nbsp;&nbsp; @Html.DisplayFor(m => m.Price)
+            </dd>
+        </dl>
+
+        @Html.HiddenFor(m => m.CarId)
+
+    </div>
+
+
+
+    </div>
+
+}
+
+
+

@@ -1,0 +1,118 @@
+﻿@model HumberAutoCarRental.ViewModel.CarViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h3>Edit Car</h3>
+  
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.Car.ID)
+<div class="row" style="border:1px solid #bbb9b9; border-radius:5px;padding-top:25px;">
+    <div class="col-sm-6">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.PlateId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.PlateId, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.PlateId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.CarName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.CarName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.CarName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.Maker, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.Maker, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.Maker, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => model.Car.Description, new { @class = "form-control", style = "height:150px;" })
+                @Html.ValidationMessageFor(model => model.Car.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.ImageUrl, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.ImageUrl, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.ImageUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.Availability, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Car.Availability)
+                    @Html.ValidationMessageFor(model => model.Car.Availability, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.DateAdded, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.DateAdded, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.DateAdded, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.MadeYear, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Car.MadeYear, new { htmlAttributes = new { @type = "date", @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Car.MadeYear, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Car.CarTypeId, "CarTypeId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Car.CarTypeId, new SelectList(Model.CarTypes, "Id", "Name"), new { @class = "form-control" })
+
+                @Html.ValidationMessageFor(model => model.Car.CarTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div>
+            <img src="@Model.Car.ImageUrl" alt="" style="width:100%; height:600px" />
+        </div>
+    </div>
+</div>
+    <br />
+    <div class="form-group">
+        <div class="col-md-10">
+            <input type="submit" value="Save" class="btn btn-success btn-sm" />
+          
+            @Html.Partial("_BackToListButtonPartial")
+        </div>
+    </div>
+</div>
+}
